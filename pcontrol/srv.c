@@ -32,6 +32,7 @@ void *receive_from_cln()
 			break;
 		}
 	}
+	unlink(SERVER_FIFO_NAME);
 	pthread_exit(NULL);
 }
 
@@ -53,7 +54,6 @@ void *sent_to_cln()
 		write(cln_fifo_fd, &word, sizeof(Data));
 	}while(strcmp(str, "bye"));
 	close(cln_fifo_fd);
-	unlink(SERVER_FIFO_NAME);
 	pthread_exit(NULL);
 }
 

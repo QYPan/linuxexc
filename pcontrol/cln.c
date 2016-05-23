@@ -32,6 +32,7 @@ void *receive_from_srv()
 			break;
 		}
 	}
+	unlink(CLIENT_FIFO_NAME);
 	pthread_exit(NULL);
 }
 
@@ -54,7 +55,6 @@ void *sent_to_srv()
 		write(srv_fifo_fd, &word, sizeof(Data));
 	}while(strcmp(str, "bye"));
 	close(srv_fifo_fd);
-	unlink(CLIENT_FIFO_NAME);
 	pthread_exit(NULL);
 }	
 
