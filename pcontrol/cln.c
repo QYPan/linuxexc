@@ -23,16 +23,15 @@ void *receive_from_srv()
 		perror("client fifo failure");
 		pthread_exit(NULL);
 	}
-	do{
+	while(1){
 		read_res = read(cln_fifo_fd, &word, sizeof(Data));
 		if(read_res > 0){
 			printf("%s\n", word.data);
 		}
 		else{
-			cln_fifo_fd = open(CLIENT_FIFO_NAME, O_RDONLY);
-			read_res = 1;
+			break;
 		}
-	}while(read_res > 0);
+	}
 	pthread_exit(NULL);
 }
 
@@ -47,13 +46,13 @@ void *sent_to_srv()
 		perror("no server");
 		exit(EXIT_FAILURE);
 	}
-	while(1){
+	do{
 		strcpy(word.data, "cln: ");
 		fgets(str, BUFFER_SIZE-100, stdin);
 		str[strlen(str)-1] = '\0';
 		strcat(word.data, str);
 		write(srv_fifo_fd, &word, sizeof(Data));
-	};
+	}while(strcmp(str, "bye"));
 	close(srv_fifo_fd);
 	unlink(CLIENT_FIFO_NAME);
 	pthread_exit(NULL);
@@ -68,6 +67,11 @@ int main()
 	make_cln_fifo();
 	res1 = pthread_create(&sent, NULL, sent_to_srv, NULL);
 	res2 = pthread_create(&receive, NULL, receive_from_srv, NULL);
-	pthread_join(sent, NULL);	
+	if(res1 || res2){
+		perror("thread create failed");
+		exit(EXIT_FAILURE);
+	}
+	pthread_join(sent, NULL);
+	pthread_join(receive, NULL);
 	exit(EXIT_SUCCESS);
 }
