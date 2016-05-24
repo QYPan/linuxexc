@@ -7,9 +7,10 @@
 #include <sys/stat.h>
 #include <stdio.h>
 
-int make_srv_fifo()
+int make_fifo()
 {
 	mkfifo(SERVER_FIFO_NAME, 0777);
+	mkfifo(CLIENT_FIFO_NAME, 0777);
 	return 1;
 }
 
@@ -63,7 +64,7 @@ int main()
 	pthread_t sent;
 	int res1;
 	int res2;
-	make_srv_fifo();
+	make_fifo();
 	res1 = pthread_create(&receive, NULL, receive_from_cln, NULL);
 	res2 = pthread_create(&sent, NULL, sent_to_cln, NULL);
 	if(res1 || res2){

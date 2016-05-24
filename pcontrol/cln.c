@@ -7,12 +7,6 @@
 #include <sys/stat.h>
 #include <stdio.h>
 
-int make_cln_fifo()
-{
-	mkfifo(CLIENT_FIFO_NAME, 0777);
-	return 1;
-}
-
 void *receive_from_srv()
 {
 	Data word;
@@ -64,7 +58,6 @@ int main()
 	pthread_t sent;
 	int res1;
 	int res2;
-	make_cln_fifo();
 	res1 = pthread_create(&sent, NULL, sent_to_srv, NULL);
 	res2 = pthread_create(&receive, NULL, receive_from_srv, NULL);
 	if(res1 || res2){
