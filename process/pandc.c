@@ -85,7 +85,7 @@ void *producer()
 	while(1){
 		sem_wait(&empty);
 		pro_ptr = (pro_ptr + 1) % BUFSIZE;
-		sleep(rand()%3+1); /* 生产速度 */
+		sleep(rand()%2+1); /* 生产速度 */
 		sem_post(&source);
 	}
 	pthread_exit(NULL);
@@ -96,7 +96,7 @@ void *consumer()
 	while(1){
 		sem_wait(&source);
 		con_ptr = (con_ptr + 1) % BUFSIZE;
-		sleep(rand()%3+1); /* 消费速度 */
+		sleep(rand()%4+1); /* 消费速度 */
 		sem_post(&empty);
 	}
 	pthread_exit(NULL);

@@ -17,7 +17,7 @@ int main()
 			perror("execl failed!");
 			break;
 		default:
-			waitpid(pid, NULL, 0);
+			waitpid(pid, NULL, 0); /* 等待进程 pid 结束 */
 			break;
 	}
 	return 0;
